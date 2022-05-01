@@ -1,19 +1,19 @@
 /********************* Variables *******************/
 # Environment var, format: export TF_VAR_provider_access_key=(value)
 variable "provider_access_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 # Environment var, format: export TF_VAR_provider_secret=(value)
 variable "provider_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 # Environment var, format: export TF_VAR_provider_instance_key_name=(value)
 variable "provider_instance_key_name" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -34,7 +34,7 @@ variable "provider_availability_zone" {
 }
 
 variable "server_private_ips" {
-  type = list
+  type = list(any)
 }
 /****************************************************/
 
@@ -73,8 +73,8 @@ resource "aws_route_table" "test-rt" {
   }
 
   route {
-    ipv6_cidr_block        = "::/0"
-    gateway_id = aws_internet_gateway.test-igw.id
+    ipv6_cidr_block = "::/0"
+    gateway_id      = aws_internet_gateway.test-igw.id
   }
 
   tags = {
@@ -85,8 +85,8 @@ resource "aws_route_table" "test-rt" {
 
 # # 4. Create a Subnet 
 resource "aws_subnet" "test-subnet" {
-  vpc_id     = aws_vpc.test-vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.test-vpc.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
@@ -107,26 +107,26 @@ resource "aws_security_group" "allow_web" {
   vpc_id      = aws_vpc.test-vpc.id
 
   ingress {
-    description      = "Web from VPC"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "Web from VPC"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
-    description      = "TLS from VPC"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -158,10 +158,10 @@ resource "aws_eip" "one" {
 
 # # 9. Create Ubuntu server and install/enable apache2
 resource "aws_instance" "apache-web-server" {
-  ami           = var.provider_ami # us-west-2
-  instance_type = var.provider_instance_type
+  ami               = var.provider_ami # us-west-2
+  instance_type     = var.provider_instance_type
   availability_zone = var.provider_availability_zone
-  key_name = var.provider_instance_key_name
+  key_name          = var.provider_instance_key_name
 
   network_interface {
     device_index         = 0
