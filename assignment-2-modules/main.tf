@@ -11,21 +11,11 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
 
-# # 2. Create a Subnet 
-resource "aws_subnet" "main" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = var.provider_availability_zone
-
-  tags = {
-    Name = "Main"
-  }
+module "server" {
+  source = "./server-module"
+  vpc_id = aws_vpc.main.id
 }
 
-# # 3. Create Ubuntu server and install/enable apache2
-resource "aws_instance" "main" {
-  ami               = var.provider_ami # us-west-2
-  instance_type     = var.provider_instance_type
-  availability_zone = var.provider_availability_zone
-  subnet_id         = aws_subnet.main.id
+output "server_id" {
+  value = module.server.ec2_instance.id
 }
