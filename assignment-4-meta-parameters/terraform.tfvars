@@ -1,0 +1,5 @@
+provider_region            = "us-east-1"
+provider_region_west       = "us-west-2"
+provider_instance_type     = "t2.micro"
+provider_ami               = "ami-04505e74c0741db8d"
+provider_ami_west          = "ami-0ee8244746ec5d6d4"
